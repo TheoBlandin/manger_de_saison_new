@@ -1,17 +1,21 @@
 import { Colors } from "@/constants/Colors";
 import {
-  View,
+  Pressable,
   StyleSheet,
   TouchableWithoutFeedback,
-  FlatList,
-  ListRenderItem,
+  View,
 } from "react-native";
-import { BBodyText } from "./texts/body/BBodyText";
-import { BLargeText } from "./texts/body/BLargeText";
 import { IconButton } from "./IconButton";
+import { BLargeText } from "./texts/body/BLargeText";
 
-import Abricot from "./../assets/food/abricot.svg";
+import DefaultFood from "./../assets/food/abricot.svg";
+import { foodImages } from "./../assets/foodImages";
 import { SeasonCheckbox } from "./SeasonCheckbox";
+
+import Like from "./../assets/icons/like.svg";
+import Dislike from "./../assets/icons/dislike.svg";
+
+import { BBodyText } from "./texts/body/BBodyText";
 
 export function FoodModal({
   name,
@@ -19,12 +23,20 @@ export function FoodModal({
   img,
   season,
   onClose,
+  onLike,
+  onDislike,
+  isLiked,
+  isDisliked
 }: {
   name: string;
   type: string;
   img: string;
   season: number[];
   onClose: () => void;
+  onLike: (name: string) => void;
+  onDislike: (name: string) => void;
+  isLiked: boolean;
+  isDisliked: boolean
 }) {
   const months = [
     "jan",
@@ -40,6 +52,8 @@ export function FoodModal({
     "nov",
     "dec",
   ];
+
+  const FoodImage = foodImages[img as keyof typeof foodImages] ?? DefaultFood;
 
   return (
     <TouchableWithoutFeedback onPress={onClose}>
@@ -62,7 +76,7 @@ export function FoodModal({
 
             {/* Illustration */}
             <View style={styles.modalBody}>
-              <Abricot width={128} height={128} />
+              <FoodImage width={128} height={128} />
               <BLargeText>{name}</BLargeText>
             </View>
 
@@ -90,6 +104,18 @@ export function FoodModal({
                   );
                 })}
               </View>
+            </View>
+
+            {/* Preference */}
+            <View style={{ flexDirection: "row", gap: 12, alignSelf: "stretch" }}>
+              <Pressable onPress={() => onLike(name)} style={styles.preferenceButton}>
+                <Like width={48} height={48} color={ isLiked ? Colors.like : Colors.grey} />
+                <BBodyText>J'aime</BBodyText>
+              </Pressable>
+              <Pressable onPress={() => onDislike(name)} style={styles.preferenceButton}>
+                <Dislike width={48} height={48} color={ isDisliked ? Colors.dislike : Colors.grey} />
+                <BBodyText>Je n'aime pas</BBodyText>
+              </Pressable>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -142,4 +168,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 16,
   },
+  preferenceButton: {
+    flexDirection: "column",
+    alignItems: "center",
+    flex: 1,
+  }
 });

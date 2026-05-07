@@ -2,11 +2,8 @@ import { CustomHeader } from "@/components/CustomHeader";
 import { FoodCard } from "@/components/FoodCard";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Modal } from "react-native";
-import {
-  useSafeAreaInsets,
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
+import { View, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FlatGrid } from "react-native-super-grid";
 
@@ -14,8 +11,11 @@ import foodDataJson from "./../assets/food.json";
 import { FoodModal } from "@/components/FoodModal";
 import BackgroundCurve from "@/components/BackgroundCurve";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export interface FoodItem {
   name: string;
+  path: string;
   type: "Fruit" | "Légume";
   season: number[];
 }
@@ -71,7 +71,96 @@ export default function Index() {
   // Modal managment
   const [modalFood, setModalFood] = useState<FoodItem | undefined>(undefined);
 
+  // Background curve management
   const [headerHeight, setHeaderHeight] = useState(0);
+
+  // Preferences management
+  const [likedFood, setLikedFood] = useState<string[]>([]);
+  const [dislikedFood, setDislikedFood] = useState<string[]>([]);
+
+  async function loadData<T>(key: string): Promise<string[]> {
+    try {
+      const value = await AsyncStorage.getItem(key);
+
+      return value ? JSON.parse(value) : [];
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
+  async function saveData(key: string, value: string[]) {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function toggleLikeFood(name: string) {
+    const isLiked = likedFood.includes(name);
+    const isDisliked = dislikedFood.includes(name);
+
+    let updatedLikes = [...likedFood];
+    let updatedDislikes = [...dislikedFood];
+
+    if (isLiked) {
+      // remove like
+      updatedLikes = updatedLikes.filter((item) => item !== name);
+    } else {
+      // add like
+      updatedLikes.push(name);
+
+      // remove from dislikes if needed
+      if (isDisliked) {
+        updatedDislikes = updatedDislikes.filter((item) => item !== name);
+        setDislikedFood(updatedDislikes);
+        await saveData("dislike", updatedDislikes);
+      }
+    }
+
+    setLikedFood(updatedLikes);
+    await saveData("like", updatedLikes);
+  }
+
+  async function toggleDislikeFood(name: string) {
+    const isDisliked = dislikedFood.includes(name);
+    const isLiked = likedFood.includes(name);
+
+    let updatedDislikes = [...dislikedFood];
+    let updatedLikes = [...likedFood];
+
+    if (isDisliked) {
+      // remove dislike
+      updatedDislikes = updatedDislikes.filter((item) => item !== name);
+    } else {
+      // add dislike
+      updatedDislikes.push(name);
+
+      // remove from likes if needed
+      if (isLiked) {
+        updatedLikes = updatedLikes.filter((item) => item !== name);
+        setLikedFood(updatedLikes);
+        await saveData("like", updatedLikes);
+      }
+    }
+
+    setDislikedFood(updatedDislikes);
+    await saveData("dislike", updatedDislikes);
+  }
+
+  useEffect(() => {
+    const fetchFoodPreferences = async () => {
+      const dataLiked: string[] = await loadData("like");
+      setLikedFood(dataLiked);
+      console.log("data liked : ", dataLiked)
+
+      const dataDisliked: string[] = await loadData("dislike");
+      setLikedFood(dataDisliked);
+      console.log("data disliked : ", dataDisliked)
+    };
+    fetchFoodPreferences();
+  }, []);
 
   return (
     <>
@@ -79,9 +168,13 @@ export default function Index() {
         <FoodModal
           name={modalFood.name}
           type={modalFood.type}
-          img="./../assets/food/abricot.svg"
+          img={modalFood.path}
           season={modalFood.season}
           onClose={() => setModalFood(undefined)}
+          onLike={(name: string) => toggleLikeFood(name)}
+          onDislike={(name: string) => toggleDislikeFood(name)}
+          isLiked={likedFood.includes(modalFood.name)}
+          isDisliked={dislikedFood.includes(modalFood.name)}
         />
       )}
 
@@ -121,8 +214,11 @@ export default function Index() {
               renderItem={({ item: name }) => (
                 <FoodCard
                   name={name}
+                  img={currentFood[name].path}
                   type={currentFood[name].type}
                   onPress={() => setModalFood(currentFood[name])}
+                  isLiked={likedFood.includes(name)}
+                  isDisliked={dislikedFood.includes(name)}
                 />
               )}
             />

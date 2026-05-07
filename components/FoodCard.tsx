@@ -1,18 +1,50 @@
 import { Colors } from "@/constants/Colors";
-import { View, StyleSheet, Pressable } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { BBodyText } from "./texts/body/BBodyText";
 import { DBodyText } from "./texts/display/DBodyText";
 
-import Abricot from "./../assets/food/abricot.svg"
+import DefaultFood from "./../assets/food/abricot.svg";
+import { foodImages } from "./../assets/foodImages";
 
-export function FoodCard({ name, type, onPress }: { name: string; type: string, onPress: () => void }) {
+import Like from "./../assets/icons/like.svg";
+import Dislike from "./../assets/icons/dislike.svg";
+
+export function FoodCard({
+  name,
+  img,
+  type,
+  onPress,
+  isLiked,
+  isDisliked
+}: {
+  name: string;
+  img: string;
+  type: string;
+  onPress: () => void;
+  isLiked: boolean;
+  isDisliked: boolean
+}) {
+  const FoodImage = foodImages[img as keyof typeof foodImages] ?? DefaultFood;
+
   return (
     <Pressable onPress={onPress}>
       <View style={styles.card}>
-        <View style={styles.foodInfo}>
-          <DBodyText style={ type == 'Légume' ? styles.vegetable : styles.fruit }>{type.charAt(0).toUpperCase()}</DBodyText>
+        <View style={{ flexDirection: 'row', width: '100%', height: 24, alignItems: 'center', justifyContent: isLiked || isDisliked ? "space-between" : "flex-start", }}>
+          <DBodyText style={type == "Légume" ? styles.vegetable : styles.fruit}>
+            {type.charAt(0).toUpperCase()}
+          </DBodyText>
+          {
+            isLiked && (
+              <Like height={24} width={24} color={Colors.like} />
+            )
+          }
+          {
+            isDisliked && (
+              <Dislike height={24} width={24} color={Colors.dislike} />
+            )
+          }
         </View>
-        <Abricot width={64} height={64} />
+        <FoodImage width={64} height={64} />
         <View style={styles.nameContainer}>
           <BBodyText style={styles.name}>{name}</BBodyText>
         </View>
@@ -34,16 +66,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
   },
-  foodInfo: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'flex-start'
-  },
   vegetable: {
-    color: Colors.vegetable
+    color: Colors.vegetable,
   },
   fruit: {
-    color: Colors.fruit
+    color: Colors.fruit,
   },
   nameContainer: {
     height: 45,
