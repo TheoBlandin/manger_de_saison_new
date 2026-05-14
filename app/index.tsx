@@ -2,7 +2,7 @@ import { CustomHeader } from "@/components/CustomHeader";
 import { FoodCard } from "@/components/FoodCard";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Linking, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FlatGrid } from "react-native-super-grid";
@@ -12,7 +12,8 @@ import { FoodModal } from "@/components/FoodModal";
 import BackgroundCurve from "@/components/BackgroundCurve";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { BSmallText } from "@/components/texts/body/BSmallText";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 export interface FoodItem {
   name: string;
   path: string;
@@ -153,14 +154,38 @@ export default function Index() {
     const fetchFoodPreferences = async () => {
       const dataLiked: string[] = await loadData("like");
       setLikedFood(dataLiked);
-      console.log("data liked : ", dataLiked)
 
       const dataDisliked: string[] = await loadData("dislike");
       setLikedFood(dataDisliked);
-      console.log("data disliked : ", dataDisliked)
     };
     fetchFoodPreferences();
   }, []);
+
+  // Swipe management
+  const swipeGesture = Gesture.Pan()
+    .activeOffsetX([-20, 20])
+    .failOffsetY([-15, 15]) // ignore vertical swipe
+    .onEnd((e) => {
+      if (modalFood) return;
+
+      if (e.translationX > 60) {
+        previousMonth();
+      }
+      if (e.translationX < -60) {
+        nextMonth();
+      }
+    });
+
+  // External link opening
+  const openWebsite = async (url: string) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.log("Impossible d'ouvrir l'URL :", url);
+    }
+  };
 
   return (
     <>
@@ -177,54 +202,93 @@ export default function Index() {
           isDisliked={dislikedFood.includes(modalFood.name)}
         />
       )}
-
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: Colors.background,
-          paddingBottom: insets.bottom,
-        }}
-      >
-        <CustomHeader
-          currentMonth={months[currentMonth]}
-          previous={() => previousMonth()}
-          next={() => nextMonth()}
-          onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
-        />
-
+      <GestureDetector gesture={swipeGesture}>
         <View
           style={{
-            position: "absolute",
-            top: headerHeight,
-            left: 0,
-            right: 0,
+            flex: 1,
+            backgroundColor: Colors.background,
+            paddingBottom: insets.bottom,
           }}
         >
-          <BackgroundCurve />
-        </View>
+          <CustomHeader
+            currentMonth={months[currentMonth]}
+            previous={() => previousMonth()}
+            next={() => nextMonth()}
+            onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
+          />
 
-        {currentFood && (
-          <View style={{ width: "100%", flex: 1 }}>
-            <FlatGrid
-              showsVerticalScrollIndicator={false}
-              style={styles.gridView}
-              itemDimension={115}
-              spacing={8}
-              data={Object.keys(currentFood)}
-              renderItem={({ item: name }) => (
-                <FoodCard
-                  name={name}
-                  img={currentFood[name].path}
-                  type={currentFood[name].type}
-                  onPress={() => setModalFood(currentFood[name])}
-                  isLiked={likedFood.includes(name)}
-                  isDisliked={dislikedFood.includes(name)}
-                />
-              )}
-            />
+          <View
+            style={{
+              position: "absolute",
+              top: headerHeight,
+              left: 0,
+              right: 0,
+            }}
+          >
+            <BackgroundCurve />
           </View>
-        )}
-      </View>
+
+          {currentFood && (
+            <View style={{ width: "100%", flex: 1 }}>
+              <FlatGrid
+                showsVerticalScrollIndicator={false}
+                style={styles.gridView}
+                itemDimension={115}
+                spacing={8}
+                data={Object.keys(currentFood)}
+                renderItem={({ item: name }) => (
+                  <FoodCard
+                    name={name}
+                    img={currentFood[name].path}
+                    type={currentFood[name].type}
+                    onPress={() => setModalFood(currentFood[name])}
+                    isLiked={likedFood.includes(name)}
+                    isDisliked={dislikedFood.includes(name)}
+                  />
+                )}
+                ListFooterComponent={
+                  <View
+                    style={{
+                      paddingBottom: 12,
+                      display: "flex",
+                      paddingInline: 12,
+                    }}
+                  >
+                    <BSmallText
+                      onPress={() =>
+                        openWebsite(
+                          "https://www.greenpeace.fr/guetteur/calendrier/"
+                        )
+                      }
+                      style={{
+                        color: Colors.textSecondary,
+                        textDecorationLine: "underline",
+                        alignSelf: "flex-start",
+                      }}
+                    >
+                      Source : Greenpeace
+                    </BSmallText>
+                    <BSmallText
+                      style={{
+                        color: Colors.textSecondary,
+                        alignSelf: "flex-start",
+                      }}
+                    >
+                      Application développée par{" "}
+                      <Text
+                        style={{ textDecorationLine: "underline" }}
+                        onPress={() => openWebsite("https://theoblandin.com/")}
+                      >
+                        Théo Blandin
+                      </Text>
+                    </BSmallText>
+                  </View>
+                }
+              />
+            </View>
+          )}
+        </View>
+      </GestureDetector>
     </>
   );
 }

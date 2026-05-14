@@ -1,10 +1,10 @@
 import { Colors } from '@/constants/Colors';
 import { Text, StyleSheet, TextProps } from 'react-native';
 
-export function BSmallText(props: TextProps) {
+export function BSmallText({ children, ...props }: TextProps) {
   return (
     <Text {...props} style={[styles.text, props.style]}>
-      {props.children}
+      {children}
     </Text>
   );
 }
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Fredoka_400Regular',
     fontSize: 13,
-    lineHeight: 16 * 1.4,
+    lineHeight: 13 * 1.4,
     color: Colors.textDefault
   },
 });
