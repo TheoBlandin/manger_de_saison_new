@@ -1,45 +1,60 @@
+// Components
 import { CustomHeader } from "@/components/CustomHeader";
 import { FoodCard } from "@/components/FoodCard";
-import { Colors } from "@/constants/Colors";
-import { useEffect, useState } from "react";
-import { View, StyleSheet, Linking, Text } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-import { FlatGrid } from "react-native-super-grid";
-
-import foodDataJson from "./../assets/food.json";
 import { FoodModal } from "@/components/FoodModal";
 import BackgroundCurve from "@/components/BackgroundCurve";
+import { FiltersModal } from "@/components/FiltersModal";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// Design
+import { Colors } from "@/constants/Colors";
 import { BSmallText } from "@/components/texts/body/BSmallText";
+
+// React
+import { useEffect, useState } from "react";
+import { View, StyleSheet, Linking, Text } from "react-native";
+
+// Packages
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { FlatGrid } from "react-native-super-grid";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+
+// Data
+import foodDataJson from "./../assets/food.json";
+
 export interface FoodItem {
-  name: string;
   path: string;
   type: "Fruit" | "Légume";
   season: number[];
 }
 
+const MONTHS = [
+  "Janvier",
+  "Février",
+  "Mars",
+  "Avril",
+  "Mai",
+  "Juin",
+  "Juillet",
+  "Août",
+  "Septembre",
+  "Octobre",
+  "Novembre",
+  "Décembre",
+];
+
 export default function Index() {
   const insets = useSafeAreaInsets();
 
-  // Months managment
-  const months = [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre",
-  ];
+  /* DATA */
+  const allData = foodDataJson as Record<string, FoodItem>;
+  const [filteredData, setFilteredData] =
+    useState<Record<string, FoodItem>>(allData);
+  const [displayData, setDisplayData] = useState<
+    Record<string, FoodItem> | undefined
+  >(undefined);
 
+  /* CALENDAR */
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()); // id in months array
 
   function previousMonth() {
@@ -50,39 +65,49 @@ export default function Index() {
     setCurrentMonth((currentMonth + 1) % 12);
   }
 
-  // Grid managment
-  const foodData = foodDataJson as Record<string, FoodItem>;
-  const [currentFood, setCurrentFood] = useState<
-    Record<string, FoodItem> | undefined
-  >(undefined);
+  // Swipe management
+  const swipeGesture = Gesture.Pan()
+    .activeOffsetX([-20, 20])
+    .failOffsetY([-15, 15]) // ignore vertical swipe
+    .onEnd((e) => {
+      if (modalFood || modalFilters) return;
+      if (e.translationX > 60) {
+        previousMonth();
+      }
+      if (e.translationX < -60) {
+        nextMonth();
+      }
+    });
 
-  function filterFood(monthId: number) {
+  function filterByMonth(monthID: number, data: Record<string, FoodItem>) {
     const filtered = Object.fromEntries(
-      Object.entries(foodData).filter(([name, data]) =>
-        data.season.includes(monthId)
+      Object.entries(data).filter(([name, info]) =>
+        info.season.includes(monthID)
       )
     );
     return filtered;
   }
 
   useEffect(() => {
-    if (currentMonth) setCurrentFood(filterFood(currentMonth));
-  }, [currentMonth]);
+    const filtered = filterByMonth(currentMonth, filteredData);
+    setDisplayData(filtered);
+  }, [currentMonth, filteredData]);
 
-  // Modal managment
-  const [modalFood, setModalFood] = useState<FoodItem | undefined>(undefined);
+  /* MODALS */
+  const [modalFood, setModalFood] = useState<string | undefined>(undefined);
+  const [modalFilters, setModalFilters] = useState<boolean>(false);
 
-  // Background curve management
+  /* BACKGROUND CURVE */
   const [headerHeight, setHeaderHeight] = useState(0);
 
-  // Preferences management
+  /* PREFERENCES */
   const [likedFood, setLikedFood] = useState<string[]>([]);
   const [dislikedFood, setDislikedFood] = useState<string[]>([]);
 
   async function loadData<T>(key: string): Promise<string[]> {
+    // key : like or dislike
     try {
       const value = await AsyncStorage.getItem(key);
-
       return value ? JSON.parse(value) : [];
     } catch (e) {
       console.error(e);
@@ -91,6 +116,7 @@ export default function Index() {
   }
 
   async function saveData(key: string, value: string[]) {
+    // key : like or dislike
     try {
       await AsyncStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
@@ -98,56 +124,46 @@ export default function Index() {
     }
   }
 
-  async function toggleLikeFood(name: string) {
-    const isLiked = likedFood.includes(name);
-    const isDisliked = dislikedFood.includes(name);
+  async function togglePreferenceFood(preference: string, id: string) {
+    const isLiked = likedFood.includes(id);
+    const isDisliked = dislikedFood.includes(id);
 
-    let updatedLikes = [...likedFood];
-    let updatedDislikes = [...dislikedFood];
+    let updatedLiked = [...likedFood]; // copy array
+    let updatedDisliked = [...dislikedFood];
 
-    if (isLiked) {
-      // remove like
-      updatedLikes = updatedLikes.filter((item) => item !== name);
-    } else {
-      // add like
-      updatedLikes.push(name);
-
-      // remove from dislikes if needed
-      if (isDisliked) {
-        updatedDislikes = updatedDislikes.filter((item) => item !== name);
-        setDislikedFood(updatedDislikes);
-        await saveData("dislike", updatedDislikes);
-      }
-    }
-
-    setLikedFood(updatedLikes);
-    await saveData("like", updatedLikes);
-  }
-
-  async function toggleDislikeFood(name: string) {
-    const isDisliked = dislikedFood.includes(name);
-    const isLiked = likedFood.includes(name);
-
-    let updatedDislikes = [...dislikedFood];
-    let updatedLikes = [...likedFood];
-
-    if (isDisliked) {
-      // remove dislike
-      updatedDislikes = updatedDislikes.filter((item) => item !== name);
-    } else {
-      // add dislike
-      updatedDislikes.push(name);
-
-      // remove from likes if needed
+    if (preference == "like") {
       if (isLiked) {
-        updatedLikes = updatedLikes.filter((item) => item !== name);
-        setLikedFood(updatedLikes);
-        await saveData("like", updatedLikes);
+        // food already liked and user tapped on like button → remove food from liked
+        updatedLiked = updatedLiked.filter((item) => item !== id);
+      } else {
+        // food is disliked or has no preference and user tapped on like button → add food to liked
+        updatedLiked.push(id);
+        if (isDisliked) {
+          // food is disliked and user tapped on like button → remove food from disliked
+          updatedDisliked = updatedDisliked.filter((item) => item !== id);
+          setDislikedFood(updatedDisliked); // update temporary array
+          await saveData("dislike", updatedDisliked); // update permanent local storage
+        }
       }
+      setLikedFood(updatedLiked); // update temporary array
+      await saveData("like", updatedLiked); // update permanent local storage
+    } else if (preference == "dislike") {
+      if (isDisliked) {
+        // food already disliked and user tapped on dislike button → remove food from disliked
+        updatedDisliked = updatedDisliked.filter((item) => item !== id);
+      } else {
+        // food is liked or has no preference and user tapped on dislike button → add food to disliked
+        updatedDisliked.push(id);
+        if (isLiked) {
+          // food is liked and user tapped on dislike button → remove food from liked
+          updatedLiked = updatedLiked.filter((item) => item !== id);
+          setLikedFood(updatedLiked); // update temporary array
+          await saveData("like", updatedLiked); // update permanent local storage
+        }
+      }
+      setDislikedFood(updatedDisliked); // update temporary array
+      await saveData("dislike", updatedDisliked); // update permanent local storage
     }
-
-    setDislikedFood(updatedDislikes);
-    await saveData("dislike", updatedDislikes);
   }
 
   useEffect(() => {
@@ -156,25 +172,34 @@ export default function Index() {
       setLikedFood(dataLiked);
 
       const dataDisliked: string[] = await loadData("dislike");
-      setLikedFood(dataDisliked);
+      setDislikedFood(dataDisliked);
     };
     fetchFoodPreferences();
   }, []);
 
-  // Swipe management
-  const swipeGesture = Gesture.Pan()
-    .activeOffsetX([-20, 20])
-    .failOffsetY([-15, 15]) // ignore vertical swipe
-    .onEnd((e) => {
-      if (modalFood) return;
+  /* FILTERS */
+  const [filterType, setFilterType] = useState<number>(0); // 0: Tous - 1: Fruits - 2: Légumes
+  const [filterPreference, setFilterPreference] = useState<number>(0); // 0: Tous - 1: J'aime - 2: Je n'aime pas
 
-      if (e.translationX > 60) {
-        previousMonth();
-      }
-      if (e.translationX < -60) {
-        nextMonth();
-      }
-    });
+  useEffect(() => {
+    if (filterType == 0 && filterPreference == 0) { // ni filters
+      setFilteredData(allData);
+    } else {
+      const typeFilterValue =
+        filterType === 1 ? "Fruit" : filterType === 2 ? "Légume" : null;
+      
+
+      const filtered = Object.fromEntries(
+        Object.entries(allData).filter(
+          ([name, data]) =>
+            (typeFilterValue === null || data.type === typeFilterValue) 
+            &&
+            (filterPreference === 1 ? likedFood.includes(name) : filterPreference === 2 ? dislikedFood.includes(name) : true)
+        )
+      );
+      setFilteredData(filtered);
+    }
+  }, [filterType, filterPreference]);
 
   // External link opening
   const openWebsite = async (url: string) => {
@@ -191,17 +216,29 @@ export default function Index() {
     <>
       {modalFood && (
         <FoodModal
-          name={modalFood.name}
-          type={modalFood.type}
-          img={modalFood.path}
-          season={modalFood.season}
+          name={modalFood}
+          type={allData[modalFood].type}
+          img={allData[modalFood].path}
+          season={allData[modalFood].season}
           onClose={() => setModalFood(undefined)}
-          onLike={(name: string) => toggleLikeFood(name)}
-          onDislike={(name: string) => toggleDislikeFood(name)}
-          isLiked={likedFood.includes(modalFood.name)}
-          isDisliked={dislikedFood.includes(modalFood.name)}
+          onPreference={(key: string, id: string) =>
+            togglePreferenceFood(key, id)
+          }
+          isLiked={likedFood.includes(modalFood)}
+          isDisliked={dislikedFood.includes(modalFood)}
         />
       )}
+
+      {modalFilters && (
+        <FiltersModal
+          onClose={() => setModalFilters(false)}
+          currentFilterType={filterType}
+          currentPreferenceType={filterPreference}
+          onChangeType={(type: number) => setFilterType(type)}
+          onChangePreference={(preference: number) => setFilterPreference(preference)}
+        />
+      )}
+
       <GestureDetector gesture={swipeGesture}>
         <View
           style={{
@@ -211,9 +248,10 @@ export default function Index() {
           }}
         >
           <CustomHeader
-            currentMonth={months[currentMonth]}
-            previous={() => previousMonth()}
-            next={() => nextMonth()}
+            currentMonth={MONTHS[currentMonth]}
+            onPrevious={() => previousMonth()}
+            onNext={() => nextMonth()}
+            onFilters={() => setModalFilters((prev) => !prev)}
             onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
           />
 
@@ -228,20 +266,20 @@ export default function Index() {
             <BackgroundCurve />
           </View>
 
-          {currentFood && (
+          {displayData && (
             <View style={{ width: "100%", flex: 1 }}>
               <FlatGrid
                 showsVerticalScrollIndicator={false}
                 style={styles.gridView}
                 itemDimension={115}
                 spacing={8}
-                data={Object.keys(currentFood)}
+                data={Object.keys(displayData)}
                 renderItem={({ item: name }) => (
                   <FoodCard
                     name={name}
-                    img={currentFood[name].path}
-                    type={currentFood[name].type}
-                    onPress={() => setModalFood(currentFood[name])}
+                    img={displayData[name].path}
+                    type={displayData[name].type}
+                    onPress={() => setModalFood(name)}
                     isLiked={likedFood.includes(name)}
                     isDisliked={dislikedFood.includes(name)}
                   />
@@ -255,18 +293,22 @@ export default function Index() {
                     }}
                   >
                     <BSmallText
-                      onPress={() =>
-                        openWebsite(
-                          "https://www.greenpeace.fr/guetteur/calendrier/"
-                        )
-                      }
                       style={{
                         color: Colors.textSecondary,
-                        textDecorationLine: "underline",
                         alignSelf: "flex-start",
                       }}
                     >
-                      Source : Greenpeace
+                      Source :{" "}
+                      <Text
+                        style={{ textDecorationLine: "underline" }}
+                        onPress={() =>
+                          openWebsite(
+                            "https://www.greenpeace.fr/guetteur/calendrier/"
+                          )
+                        }
+                      >
+                        Greenpeace
+                      </Text>
                     </BSmallText>
                     <BSmallText
                       style={{

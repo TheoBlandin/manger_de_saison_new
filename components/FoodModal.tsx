@@ -23,8 +23,7 @@ export function FoodModal({
   img,
   season,
   onClose,
-  onLike,
-  onDislike,
+  onPreference,
   isLiked,
   isDisliked
 }: {
@@ -33,8 +32,7 @@ export function FoodModal({
   img: string;
   season: number[];
   onClose: () => void;
-  onLike: (name: string) => void;
-  onDislike: (name: string) => void;
+  onPreference: (key: string, name: string) => void;
   isLiked: boolean;
   isDisliked: boolean
 }) {
@@ -108,11 +106,11 @@ export function FoodModal({
 
             {/* Preference */}
             <View style={{ flexDirection: "row", gap: 12, alignSelf: "stretch" }}>
-              <Pressable onPress={() => onLike(name)} style={styles.preferenceButton}>
+              <Pressable onPress={() => onPreference('like', name)} style={styles.preferenceButton}>
                 <Like width={48} height={48} color={ isLiked ? Colors.like : Colors.grey} />
                 <BBodyText>J'aime</BBodyText>
               </Pressable>
-              <Pressable onPress={() => onDislike(name)} style={styles.preferenceButton}>
+              <Pressable onPress={() => onPreference('dislike', name)} style={styles.preferenceButton}>
                 <Dislike width={48} height={48} color={ isDisliked ? Colors.dislike : Colors.grey} />
                 <BBodyText>Je n'aime pas</BBodyText>
               </Pressable>

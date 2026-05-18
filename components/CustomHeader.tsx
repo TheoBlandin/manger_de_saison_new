@@ -10,13 +10,15 @@ import { IconButton } from "./IconButton";
 
 export function CustomHeader({
   currentMonth,
-  previous,
-  next,
+  onPrevious,
+  onNext,
+  onFilters,
   onLayout
 }: {
   currentMonth: string;
-  previous: () => void;
-  next: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+  onFilters: () => void;
   onLayout: (e: any) => void;
 }) {
   const insets = useSafeAreaInsets();
@@ -24,20 +26,20 @@ export function CustomHeader({
   return (
     <View style={[styles.container, { paddingTop: insets.top }]} onLayout={onLayout}>
       <View style={styles.content}>
-        <Pressable style={styles.button}>
+        <Pressable onPress={onFilters} style={styles.button}>
           <SlidersVertical size={24} color={Colors.textDefault} />
         </Pressable>
         <View style={styles.monthPicker}>
           <IconButton
             iconName="chevronLeft"
             label="Mois précédent"
-            onPress={previous}
+            onPress={onPrevious}
           />
           <BLargeText>{currentMonth}</BLargeText>
           <IconButton
             iconName="chevronRight"
             label="Mois suivant"
-            onPress={next}
+            onPress={onNext}
           />
         </View>
         <IconButton iconName="search" label="Rechercher" onPress={() => null} />
