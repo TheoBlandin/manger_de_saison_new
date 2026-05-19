@@ -26,7 +26,6 @@ export function FiltersModal({
   onChangeType: (type: number) => void;
   onChangePreference: (preference: number) => void;
 }) {
-  const insets = useSafeAreaInsets();
 
   const typeSegments = ["Tous", "Fruits", "Légumes"];
   const preferenceSegments = ["Tous", "J'aime", "Je n'aime pas"];
@@ -55,7 +54,7 @@ export function FiltersModal({
     <TouchableWithoutFeedback onPress={onClose}>
       <View style={styles.overlay}>
         <TouchableWithoutFeedback>
-          <View style={[styles.modalView, { paddingBottom: insets.bottom }]}>
+          <View style={[styles.modalView, { paddingBottom: 24 }]}>
             {/* Header */}
             <View style={styles.modalHeader}>
               <BLargeText>Filtres</BLargeText>
@@ -97,7 +96,7 @@ export function FiltersModal({
                       <BBodyText>{label}</BBodyText>
                     </Pressable>
                     <View
-                      key={index}
+                      key={label + index}
                       style={[
                         styles.separatorContainer,
                         {
@@ -148,7 +147,7 @@ export function FiltersModal({
                       <BBodyText>{label}</BBodyText>
                     </Pressable>
                     <View
-                      key={index}
+                      key={label + index}
                       style={[
                         styles.separatorContainer,
                         {

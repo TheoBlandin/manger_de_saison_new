@@ -7,7 +7,8 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Star
+  ArrowLeft,
+  Star,
 } from "lucide-react-native";
 
 export function IconButton({
@@ -25,6 +26,7 @@ export function IconButton({
     chevronRight: ChevronRight,
     chevronLeft: ChevronLeft,
     x: X,
+    arrowLeft: ArrowLeft,
     star: Star
   };
 

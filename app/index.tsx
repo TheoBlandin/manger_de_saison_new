@@ -11,10 +11,9 @@ import { BSmallText } from "@/components/texts/body/BSmallText";
 
 // React
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Linking, Text } from "react-native";
+import { View, StyleSheet, Linking, Text, StatusBar } from "react-native";
 
 // Packages
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FlatGrid } from "react-native-super-grid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -44,12 +43,16 @@ const MONTHS = [
 ];
 
 export default function Index() {
-  const insets = useSafeAreaInsets();
-
   /* DATA */
   const allData = foodDataJson as Record<string, FoodItem>;
   const [filteredData, setFilteredData] =
     useState<Record<string, FoodItem>>(allData);
+  const [monthlyData, setMonthlyData] = useState<
+    Record<string, FoodItem> | undefined
+  >(undefined);
+  const [searchResult, setSearchResult] = useState<
+    Record<string, FoodItem> | undefined
+  >(undefined);
   const [displayData, setDisplayData] = useState<
     Record<string, FoodItem> | undefined
   >(undefined);
@@ -90,6 +93,7 @@ export default function Index() {
 
   useEffect(() => {
     const filtered = filterByMonth(currentMonth, filteredData);
+    setMonthlyData(filtered);
     setDisplayData(filtered);
   }, [currentMonth, filteredData]);
 
@@ -182,24 +186,49 @@ export default function Index() {
   const [filterPreference, setFilterPreference] = useState<number>(0); // 0: Tous - 1: J'aime - 2: Je n'aime pas
 
   useEffect(() => {
-    if (filterType == 0 && filterPreference == 0) { // ni filters
+    if (filterType == 0 && filterPreference == 0) {
+      // no filters
       setFilteredData(allData);
     } else {
       const typeFilterValue =
         filterType === 1 ? "Fruit" : filterType === 2 ? "Légume" : null;
-      
 
       const filtered = Object.fromEntries(
         Object.entries(allData).filter(
           ([name, data]) =>
-            (typeFilterValue === null || data.type === typeFilterValue) 
-            &&
-            (filterPreference === 1 ? likedFood.includes(name) : filterPreference === 2 ? dislikedFood.includes(name) : true)
+            (typeFilterValue === null || data.type === typeFilterValue) &&
+            (filterPreference === 1
+              ? likedFood.includes(name)
+              : filterPreference === 2
+              ? dislikedFood.includes(name)
+              : true)
         )
       );
       setFilteredData(filtered);
     }
   }, [filterType, filterPreference]);
+
+  /* SEARCH */
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  useEffect(() => {
+    const normalizedQuery = searchValue.trim().toLowerCase();
+
+    if (monthlyData) {
+      if (normalizedQuery != "" && normalizedQuery.length >= 2) {
+        const result = Object.fromEntries(
+          Object.entries(allData).filter(([name]) => {
+            const words = name.toLowerCase().split(/[\s-]+/);
+
+            return words.some((word) => word.startsWith(normalizedQuery));
+          })
+        );
+        setDisplayData(result);
+      } else {
+        setDisplayData(monthlyData);
+      }
+    }
+  }, [searchValue]);
 
   // External link opening
   const openWebsite = async (url: string) => {
@@ -214,6 +243,7 @@ export default function Index() {
 
   return (
     <>
+      <StatusBar hidden />
       {modalFood && (
         <FoodModal
           name={modalFood}
@@ -235,7 +265,9 @@ export default function Index() {
           currentFilterType={filterType}
           currentPreferenceType={filterPreference}
           onChangeType={(type: number) => setFilterType(type)}
-          onChangePreference={(preference: number) => setFilterPreference(preference)}
+          onChangePreference={(preference: number) =>
+            setFilterPreference(preference)
+          }
         />
       )}
 
@@ -244,7 +276,6 @@ export default function Index() {
           style={{
             flex: 1,
             backgroundColor: Colors.background,
-            paddingBottom: insets.bottom,
           }}
         >
           <CustomHeader
@@ -252,6 +283,8 @@ export default function Index() {
             onPrevious={() => previousMonth()}
             onNext={() => nextMonth()}
             onFilters={() => setModalFilters((prev) => !prev)}
+            onSearch={setSearchValue}
+            searchValue={searchValue}
             onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
           />
 
@@ -287,7 +320,7 @@ export default function Index() {
                 ListFooterComponent={
                   <View
                     style={{
-                      paddingBottom: 12,
+                      paddingBottom: 24,
                       display: "flex",
                       paddingInline: 12,
                     }}
