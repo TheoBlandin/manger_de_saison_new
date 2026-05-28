@@ -4,7 +4,6 @@
     "slug": "manger_de_saison",
     "version": "1.0.0",
     "orientation": "portrait",
-    // "icon": "./assets/images/icon.png",
     "scheme": "mangerdesaison",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -19,7 +18,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.theoblandin.manger_de_saison"
     },
     "web": {
       "output": "static",
@@ -43,6 +43,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4f31efbe-c5b7-409b-ab59-6a6110bc0b9a"
+      }
     }
   }
 }

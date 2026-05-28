@@ -8,9 +8,14 @@ import {
 import { BLargeText } from "./texts/body/BLargeText";
 import { IconButton } from "./IconButton";
 import { BBodyText } from "./texts/body/BBodyText";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, {
+  runOnJS,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import React from "react";
 
 export function FiltersModal({
@@ -32,38 +37,81 @@ export function FiltersModal({
   const [containerWidth, setContainerWidth] = useState(0);
   const translateXType = useSharedValue(0);
   const translateXPreference = useSharedValue(0);
+  const translateY = useSharedValue(300);
+
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    const segmentWidth = containerWidth / 3;
-    translateXType.value = withSpring(currentFilterType * segmentWidth, {
+    translateY.value = withSpring(0, {
       damping: 120,
       stiffness: 1100,
     });
+  }, []);
+
+  const handleClose = () => {
+    translateY.value = withTiming(
+      300,
+      {
+        duration: 230,
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(onClose)();
+        }
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (!containerWidth) return;
+
+    const segmentWidth = containerWidth / 3;
+    const target = currentFilterType * segmentWidth;
+
+    if (isFirstRender.current) {
+      translateXType.value = target;
+    } else {
+      translateXType.value = withSpring(target, {
+        damping: 120,
+        stiffness: 1100,
+      });
+    }
   }, [currentFilterType, containerWidth]);
 
   useEffect(() => {
+    if (!containerWidth) return;
+
     const segmentWidth = containerWidth / 3;
-    translateXPreference.value = withSpring(
-      currentPreferenceType * segmentWidth,
-      {
+    const target = currentPreferenceType * segmentWidth;
+
+    if (isFirstRender.current) {
+      translateXPreference.value = target;
+      isFirstRender.current = false;
+    } else {
+      translateXPreference.value = withSpring(target, {
         damping: 120,
         stiffness: 1100,
-      }
-    );
+      });
+    }
   }, [currentPreferenceType, containerWidth]);
 
   return (
-    <TouchableWithoutFeedback onPress={onClose}>
+    <TouchableWithoutFeedback onPress={handleClose}>
       <View style={styles.overlay}>
         <TouchableWithoutFeedback>
-          <View style={[styles.modalView, { paddingBottom: 24 }]}>
+          <Animated.View
+            style={[
+              styles.modalView,
+              { paddingBottom: 24, transform: [{ translateY: translateY }] },
+            ]}
+          >
             {/* Header */}
             <View style={styles.modalHeader}>
               <BLargeText>Filtres</BLargeText>
               <IconButton
                 iconName="x"
                 label="Fermer la fenêtre"
-                onPress={onClose}
+                onPress={handleClose}
               />
             </View>
 
@@ -166,7 +214,7 @@ export function FiltersModal({
                 ))}
               </View>
             </View>
-          </View>
+          </Animated.View>
         </TouchableWithoutFeedback>
       </View>
     </TouchableWithoutFeedback>
