@@ -85,7 +85,7 @@ export function FoodModal({
                   return (
                     <SeasonCheckbox
                       key={item}
-                      isChecked={season.includes(i)}
+                      isChecked={season.includes(i + 1)}
                       month={item}
                     />
                   );
@@ -96,7 +96,7 @@ export function FoodModal({
                   return (
                     <SeasonCheckbox
                       key={item}
-                      isChecked={season.includes(i + 6)}
+                      isChecked={season.includes(i + 7)}
                       month={item}
                     />
                   );

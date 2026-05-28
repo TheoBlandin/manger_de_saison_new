@@ -2,401 +2,331 @@
   "Abricot": {
     "path": "abricot",
     "type": "Fruit",
-    "season": [5, 6, 7]
+    "season": [6, 7, 8]
   },
   "Ail": {
     "path": "ail",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-  },
-  "Amande": {
-    "path": "amande",
-    "type": "Fruit",
-    "season": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    "season": [7, 8, 9, 10, 11, 12]
   },
   "Artichaut": {
     "path": "artichaut",
     "type": "Légume",
-    "season": [3, 4, 5, 6, 7, 8]
+    "season": [5, 6, 7, 8, 9]
   },
   "Asperge": {
     "path": "asperge",
     "type": "Légume",
-    "season": [2, 3, 4, 5, 6]
+    "season": [4, 5, 6]
   },
   "Aubergine": {
     "path": "aubergine",
     "type": "Légume",
-    "season": [4, 5, 6, 7, 8, 9]
-  },
-  "Baie de goji": {
-    "path": "baie_de_goji",
-    "type": "Fruit",
-    "season": [7, 8, 9]
+    "season": [6, 7, 8, 9]
   },
   "Betterave": {
     "path": "betterave",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    "season": [1, 2, 3, 4, 10, 11, 12]
   },
   "Blette": {
     "path": "blette",
     "type": "Légume",
-    "season": [2, 3, 4, 5, 6, 7, 8, 9]
+    "season": [6, 7, 8, 9, 10]
   },
   "Brocoli": {
     "path": "brocoli",
     "type": "Légume",
-    "season": [5, 6, 7, 8, 9, 10]
-  },
-  "Brugnon": {
-    "path": "brugnon",
-    "type": "Fruit",
-    "season": [5, 6, 7]
-  },
-  "Cardon": {
-    "path": "cardon",
-    "type": "Légume",
-    "season": [10]
+    "season": [9, 10, 11]
   },
   "Carotte": {
     "path": "carotte",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    "season": [1, 2, 3, 9, 10, 11, 12]
   },
   "Cassis": {
     "path": "cassis",
     "type": "Fruit",
-    "season": [5, 6, 7]
+    "season": [6, 7, 8]
   },
-  "Céleri-branche": {
-    "path": "celeri_branche",
+  "Céleri": {
+    "path": "céleri",
     "type": "Légume",
-    "season": [0, 6, 7, 8, 9, 10, 11]
-  },
-  "Céleri-rave": {
-    "path": "celeri_rave",
-    "type": "Légume",
-    "season": [0, 1, 2, 9, 10, 11]
+    "season": [1, 2, 3, 10, 11, 12]
   },
   "Cerise": {
     "path": "cerise",
     "type": "Fruit",
-    "season": [4, 5, 6]
+    "season": [6, 7]
+  },
+  "Champignon de Paris": {
+    "path": "champignon_de_paris",
+    "type": "Légume",
+    "season": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   },
   "Châtaigne": {
-    "path": "chataigne",
+    "path": "châtaigne",
     "type": "Fruit",
-    "season": [9, 10, 11]
+    "season": [10, 11]
   },
-  "Chou blanc": {
-    "path": "chou_blanc",
+  "Chou": {
+    "path": "chou",
     "type": "Légume",
-    "season": [0, 1, 7, 8, 9, 10, 11]
+    "season": [1, 2, 3, 10, 11, 12]
   },
-  "Chou de bruxelles": {
+  "Chou de Bruxelles": {
     "path": "chou_de_bruxelles",
     "type": "Légume",
-    "season": [0, 1, 2, 8, 9, 10, 11]
-  },
-  "Chou kale": {
-    "path": "chou_kale",
-    "type": "Légume",
-    "season": [0, 1, 8, 9, 10, 11]
-  },
-  "Chou romanesco": {
-    "path": "chou_romanesco",
-    "type": "Légume",
-    "season": [5, 6, 7, 8]
-  },
-  "Chou rouge": {
-    "path": "chou_rouge",
-    "type": "Légume",
-    "season": [0, 1, 7, 8, 9, 10, 11]
-  },
-  "Chou vert": {
-    "path": "chou_vert",
-    "type": "Légume",
-    "season": [0, 2, 8, 9, 10, 11]
+    "season": [1, 2, 3, 10, 11, 12]
   },
   "Chou-fleur": {
     "path": "chou_fleur",
     "type": "Légume",
-    "season": [2, 3, 4, 8, 9, 10]
+    "season": [1, 2, 3, 9, 10, 11, 12]
   },
   "Citron": {
     "path": "citron",
     "type": "Fruit",
-    "season": [0, 1, 2, 3, 5, 10, 11]
-  },
-  "Citrouille": {
-    "path": "citrouille",
-    "type": "Fruit",
-    "season": [10]
+    "season": [1, 2, 11, 12]
   },
   "Clémentine": {
-    "path": "clementine",
+    "path": "clémentine",
     "type": "Fruit",
-    "season": [0, 1, 10, 11]
+    "season": [1, 2, 11, 12]
   },
   "Coing": {
     "path": "coing",
     "type": "Fruit",
-    "season": [8, 9, 10]
+    "season": [10]
   },
   "Concombre": {
     "path": "concombre",
     "type": "Légume",
-    "season": [3, 4, 5, 6, 7, 8, 9]
+    "season": [5, 6, 7, 8, 9, 10]
   },
   "Courge": {
     "path": "courge",
     "type": "Légume",
-    "season": [0, 7, 8, 9, 10, 11]
+    "season": [1, 9, 10, 11, 12]
   },
   "Courgette": {
     "path": "courgette",
     "type": "Légume",
-    "season": [4, 5, 6, 7, 8, 9]
+    "season": [5, 6, 7, 8, 9, 10]
   },
-  "Crosne": {
-    "path": "crosne",
+  "Cresson": {
+    "path": "cresson",
     "type": "Légume",
-    "season": [0, 1, 2, 10, 11]
+    "season": [1, 2, 3, 4, 5, 9, 10, 11, 12]
   },
   "Échalote": {
-    "path": "echalote",
+    "path": "échalote",
     "type": "Légume",
-    "season": [9, 10, 11]
+    "season": [10, 11, 12]
   },
   "Endive": {
     "path": "endive",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 9, 10, 11]
+    "season": [1, 2, 3, 4, 10, 11, 12]
   },
   "Épinard": {
-    "path": "epinard",
+    "path": "épinard",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    "season": [1, 2, 3, 4, 5, 9, 10, 11, 12]
   },
   "Fenouil": {
     "path": "fenouil",
     "type": "Légume",
-    "season": [5, 6, 7, 8, 9, 10]
+    "season": [4, 6, 7, 8, 9, 10, 11]
   },
   "Figue": {
     "path": "figue",
     "type": "Fruit",
-    "season": [6, 7, 8, 9]
+    "season": [7, 8, 9, 10]
   },
   "Fraise": {
     "path": "fraise",
     "type": "Fruit",
-    "season": [4, 5, 6, 7]
+    "season": [5, 6, 7]
   },
   "Framboise": {
     "path": "framboise",
     "type": "Fruit",
-    "season": [5, 6, 7, 9]
-  },
-  "Frisée": {
-    "path": "frisee",
-    "type": "Légume",
-    "season": [0, 1, 2, 3, 7, 8, 9, 10, 11]
+    "season": [6, 7, 8]
   },
   "Groseille": {
     "path": "groseille",
     "type": "Fruit",
-    "season": [5, 6, 7]
+    "season": [6, 7, 8]
   },
   "Haricot vert": {
     "path": "haricot_vert",
     "type": "Légume",
-    "season": [5, 6, 7, 8, 9]
+    "season": [6, 7, 8, 9, 10]
   },
   "Kaki": {
     "path": "kaki",
     "type": "Fruit",
-    "season": [0, 9, 10, 11]
+    "season": [1, 10, 11, 12]
   },
   "Kiwi": {
     "path": "kiwi",
     "type": "Fruit",
-    "season": [0, 1, 2, 10, 11]
+    "season": [1, 2, 3, 11, 12]
   },
-  "Laitue": {
-    "path": "laitue",
+  "Maïs": {
+    "path": "maïs",
     "type": "Légume",
-    "season": [3, 4, 5, 6, 7, 8, 9]
+    "season": [7, 8, 9]
   },
   "Mâche": {
-    "path": "mache",
+    "path": "mâche",
     "type": "Légume",
-    "season": [0, 1, 10, 11]
+    "season": [1, 2, 10, 11, 12]
   },
   "Mandarine": {
     "path": "mandarine",
     "type": "Fruit",
-    "season": [0, 1, 10, 11]
+    "season": [1, 2, 11, 12]
   },
   "Melon": {
     "path": "melon",
     "type": "Fruit",
-    "season": [5, 6, 7, 8]
+    "season": [6, 7, 8, 9]
   },
   "Mirabelle": {
     "path": "mirabelle",
     "type": "Fruit",
-    "season": [7, 8]
+    "season": [8, 9]
   },
   "Mûre": {
-    "path": "mure",
+    "path": "mûre",
     "type": "Fruit",
-    "season": [7, 8]
+    "season": [8, 9]
   },
   "Myrtille": {
     "path": "myrtille",
     "type": "Fruit",
-    "season": [6, 7, 8, 9]
+    "season": [7, 8, 9]
   },
   "Navet": {
     "path": "navet",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 4, 5, 10, 11]
+    "season": [1, 2, 3, 4, 5, 10, 11, 12]
   },
   "Nectarine": {
     "path": "nectarine",
     "type": "Fruit",
-    "season": [6, 7]
+    "season": [7, 8]
   },
   "Noisette": {
     "path": "noisette",
     "type": "Fruit",
-    "season": [7, 8, 9]
+    "season": [9, 10, 11]
   },
   "Noix": {
     "path": "noix",
     "type": "Fruit",
-    "season": [8, 9]
+    "season": [9, 10]
   },
   "Oignon": {
     "path": "oignon",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    "season": [1, 2, 3, 4, 9, 10, 11, 12]
   },
   "Orange": {
     "path": "orange",
     "type": "Fruit",
-    "season": [0, 1, 2, 10, 11]
+    "season": [1, 2, 3, 12]
   },
   "Pamplemousse": {
     "path": "pamplemousse",
     "type": "Fruit",
-    "season": [0, 1, 2, 3, 4, 5]
+    "season": [2, 3, 4, 5, 6]
   },
   "Panais": {
     "path": "panais",
     "type": "Légume",
-    "season": [0, 1, 2, 8, 9, 10, 11]
+    "season": [1, 2, 3, 10, 11, 12]
   },
   "Pastèque": {
-    "path": "pasteque",
+    "path": "pastèque",
     "type": "Fruit",
-    "season": [5, 6, 7, 8]
-  },
-  "Patate douce": {
-    "path": "patate_douce",
-    "type": "Légume",
-    "season": [8, 9]
-  },
-  "Pêche": {
-    "path": "peche",
-    "type": "Fruit",
-    "season": [5, 6, 7, 8]
+    "season": [6, 7, 8, 9]
   },
   "Petit pois": {
     "path": "petit_pois",
     "type": "Légume",
-    "season": [3, 4, 5, 6]
+    "season": [5, 6, 7]
   },
-  "Physalis": {
-    "path": "physalis",
+  "Pêche": {
+    "path": "pêche",
     "type": "Fruit",
-    "season": [0, 1, 10, 11]
+    "season": [6, 7, 8, 9]
   },
   "Poire": {
     "path": "poire",
     "type": "Fruit",
-    "season": [0, 1, 2, 3, 6, 7, 8, 9, 10, 11]
+    "season": [1, 2, 3, 8, 9, 10, 11, 12]
   },
   "Poireau": {
     "path": "poireau",
     "type": "Légume",
-    "season": [0, 1, 2, 3, 8, 9, 10, 11]
+    "season": [1, 2, 3, 4, 9, 10, 11, 12]
   },
   "Poivron": {
     "path": "poivron",
     "type": "Légume",
-    "season": [5, 6, 8]
+    "season": [6, 7, 8, 9]
   },
   "Pomme": {
     "path": "pomme",
     "type": "Fruit",
-    "season": [0, 1, 2, 3, 5, 7, 8, 9, 10, 11]
-  },
-  "Pomme de terre": {
-    "path": "pomme_de_terre",
-    "type": "Légume",
-    "season": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    "season": [1, 2, 3, 4, 8, 9, 10, 11, 12]
   },
   "Potiron": {
     "path": "potiron",
     "type": "Légume",
-    "season": [8, 9, 10, 11]
+    "season": [1, 9, 10, 11, 12]
   },
   "Prune": {
     "path": "prune",
     "type": "Fruit",
-    "season": [5, 6, 7, 8]
-  },
-  "Pruneau": {
-    "path": "pruneau",
-    "type": "Fruit",
-    "season": [7, 8]
+    "season": [7, 8, 9]
   },
   "Radis": {
     "path": "radis",
     "type": "Légume",
-    "season": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    "season": [3, 4, 5, 6, 7]
   },
   "Raisin": {
     "path": "raisin",
     "type": "Fruit",
-    "season": [7, 8, 9]
+    "season": [9, 10]
   },
   "Rhubarbe": {
     "path": "rhubarbe",
     "type": "Fruit",
     "season": [4, 5, 6]
   },
-  "Rutabaga": {
-    "path": "rutabaga",
+  "Salade": {
+    "path": "salade",
     "type": "Légume",
-    "season": [9, 10, 11]
+    "season": [4, 5, 6, 7, 8, 9, 10]
   },
-  "Salsifi": {
-    "path": "salsifi",
+  "Salsifis": {
+    "path": "salsifis",
     "type": "Légume",
-    "season": [0, 1, 2, 9, 10, 11]
+    "season": [1, 2, 11, 12]
   },
   "Tomate": {
     "path": "tomate",
-    "type": "Fruit",
-    "season": [4, 5, 6, 7, 8, 9]
+    "type": "Légume",
+    "season": [6, 7, 8, 9]
   },
   "Topinambour": {
-    "path": "tompinambour",
+    "path": "topinambour",
     "type": "Légume",
-    "season": [0, 1, 2, 10, 11]
+    "season": [1, 2, 11, 12]
   }
 }

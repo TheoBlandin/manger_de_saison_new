@@ -7,18 +7,18 @@ import {
 } from "react-native";
 import { BLargeText } from "./texts/body/BLargeText";
 import { IconButton } from "./IconButton";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BBodyText } from "./texts/body/BBodyText";
 import { useEffect, useState } from "react";
 
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
+import React from "react";
 
 export function FiltersModal({
   onClose,
   currentFilterType,
   currentPreferenceType,
   onChangeType,
-  onChangePreference
+  onChangePreference,
 }: {
   onClose: () => void;
   currentFilterType: number;
@@ -26,7 +26,6 @@ export function FiltersModal({
   onChangeType: (type: number) => void;
   onChangePreference: (preference: number) => void;
 }) {
-
   const typeSegments = ["Tous", "Fruits", "Légumes"];
   const preferenceSegments = ["Tous", "J'aime", "Je n'aime pas"];
 
@@ -44,10 +43,13 @@ export function FiltersModal({
 
   useEffect(() => {
     const segmentWidth = containerWidth / 3;
-    translateXPreference.value = withSpring(currentPreferenceType * segmentWidth, {
-      damping: 120,
-      stiffness: 1100,
-    });
+    translateXPreference.value = withSpring(
+      currentPreferenceType * segmentWidth,
+      {
+        damping: 120,
+        stiffness: 1100,
+      }
+    );
   }, [currentPreferenceType, containerWidth]);
 
   return (
@@ -85,18 +87,16 @@ export function FiltersModal({
                 />
 
                 {typeSegments.map((label, index) => (
-                  <>
+                  <React.Fragment key={label}>
                     <Pressable
-                      key={label}
                       style={styles.radioElement}
                       onPress={() => onChangeType(index)}
-                      role='radio'
+                      role="radio"
                       aria-checked={index == currentFilterType}
                     >
                       <BBodyText>{label}</BBodyText>
                     </Pressable>
                     <View
-                      key={label + index}
                       style={[
                         styles.separatorContainer,
                         {
@@ -111,7 +111,7 @@ export function FiltersModal({
                     >
                       <View style={styles.separator}></View>
                     </View>
-                  </>
+                  </React.Fragment>
                 ))}
               </View>
             </View>
@@ -136,12 +136,12 @@ export function FiltersModal({
                 />
 
                 {preferenceSegments.map((label, index) => (
-                  <>
+                  <React.Fragment key={label}>
                     <Pressable
                       key={label}
                       style={styles.radioElement}
                       onPress={() => onChangePreference(index)}
-                      role='radio'
+                      role="radio"
                       aria-checked={index == currentPreferenceType}
                     >
                       <BBodyText>{label}</BBodyText>
@@ -162,7 +162,7 @@ export function FiltersModal({
                     >
                       <View style={styles.separator}></View>
                     </View>
-                  </>
+                  </React.Fragment>
                 ))}
               </View>
             </View>
